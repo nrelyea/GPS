@@ -15,13 +15,22 @@ namespace GPS
         static void Main(string[] args)
         {
 
-            Console.WriteLine("HELLO"); 
+            Console.WriteLine("HELLO");
+
+
+            List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
+
+
+
+
+
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GPS.Form1(5));
+            Application.Run(new GPS.Form1(100, speedLimitMatrix));
 
         }
 
-    }    
+    }
 }
