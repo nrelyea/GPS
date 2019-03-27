@@ -15,27 +15,8 @@ namespace GPS
     {
         static void Main(string[] args)
         {
-            /*
-            List<int> list = new List<int> { 0, 11, 22 };
-
-            File.WriteAllText(@"c:../../list_test.json", JsonConvert.SerializeObject(list));
-
-            string json = File.ReadAllText(@"c:../../list_test.json");
-            List<int> newList = JsonConvert.DeserializeObject<List<int>>(json);
-            Console.WriteLine(newList[1]);
-            */
-
-            /*
-            List<List<int>> listlist = new List<List<int>> { };
-            listlist.Add(new List<int> { 0, 11, 22 });
-            listlist.Add(new List<int> { 33, 44, 55 });
-
-            File.WriteAllText(@"c:../../list_test.json", JsonConvert.SerializeObject(listlist));
-
-            string json = File.ReadAllText(@"c:../../list_test.json");
-            List<List<int>> newList = JsonConvert.DeserializeObject<List<List<int>>>(json);
-            Console.WriteLine(newList[1][1]);
-            */
+            bool newRandomMatrix = false;
+            int newRandomMatrixSize = 5;
 
 
 
@@ -43,13 +24,18 @@ namespace GPS
 
             Console.WriteLine("HELLO");
 
+            List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
 
-            List<List<List<int>>> speedLimitMatrix = randomSpeedLimitMatrix(3, 10, 100);
-            File.WriteAllText(@"c:../../speedLimitMatrix.json", JsonConvert.SerializeObject(speedLimitMatrix));
-
-            string json = File.ReadAllText(@"c:../../speedLimitMatrix.json");
-            List<List<List<int>>> newMatrix = JsonConvert.DeserializeObject<List<List<List<int>>>>(json);
-            Console.WriteLine(newMatrix[1][1][1]);
+            if (newRandomMatrix)
+            {
+                speedLimitMatrix = randomSpeedLimitMatrix(newRandomMatrixSize, 10, 100);
+                File.WriteAllText(@"c:../../speedLimitMatrix.json", JsonConvert.SerializeObject(speedLimitMatrix));
+            }
+            else
+            {
+                string json = File.ReadAllText(@"c:../../speedLimitMatrix.json");
+                speedLimitMatrix = JsonConvert.DeserializeObject<List<List<List<int>>>>(json);
+            }
             Console.WriteLine(speedLimitMatrix[1][1][1]);
 
 

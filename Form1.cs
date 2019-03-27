@@ -33,7 +33,7 @@ namespace GPS
         public void Form1_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
 
-            //Draw Starting Grid
+            //Draw Starting Grid & Speed Limits
             for (int i = 0; i < speedLimitMatrix.Count; i++)
             {
                 for (int j = 0; j < speedLimitMatrix.Count; j++)
@@ -41,18 +41,20 @@ namespace GPS
                     if (i < speedLimitMatrix.Count - 1)
                     {
                         e.Graphics.DrawLine(Pens.Black, new Point(gridSize + gridSize * i, gridSize + gridSize * j), new Point(gridSize + gridSize * (i + 1), gridSize + gridSize * (j)));
+                        writeSpeedLimit(e, i, j, 0, speedLimitMatrix[i][j][0]);
                     }
                     if (j < speedLimitMatrix.Count - 1)
                     {
                         e.Graphics.DrawLine(Pens.Black, new Point(gridSize + gridSize * i, gridSize + gridSize * j), new Point(gridSize + gridSize * (i), gridSize + gridSize * (j + 1)));
+                        writeSpeedLimit(e, i, j, 1, speedLimitMatrix[i][j][1]);
                     }
 
                     drawPoint(e, gridSize + gridSize * i, gridSize + gridSize * j);
                 }
             }
 
-            writeSpeedLimit(e, 0, 0, 0, 100);
-            writeSpeedLimit(e, 2, 1, 1, 100);
+            //writeSpeedLimit(e, 0, 0, 0, 100);
+            //writeSpeedLimit(e, 2, 1, 1, 100);
 
 
             //drawPoint(e, 200, 400);
@@ -87,13 +89,13 @@ namespace GPS
             TextFormatFlags flags = TextFormatFlags.Bottom | TextFormatFlags.EndEllipsis;
             if (direction == 0)
             {
-                TextRenderer.DrawText(e.Graphics, "100", this.Font,
-                new Rectangle((gridSize * x - 12) + gridSize + gridSize / 2, (gridSize * y - 1) + gridSize, 25, 15), SystemColors.ControlText, flags);
+                TextRenderer.DrawText(e.Graphics, speed.ToString(), this.Font,
+                new Rectangle((gridSize * x - 12) + gridSize + gridSize / 2, (gridSize * y + 2) + gridSize, 25, 15), SystemColors.ControlText, flags);
             }
             else
             {
-                TextRenderer.DrawText(e.Graphics, "100", this.Font,
-                new Rectangle((gridSize * x - 1) + gridSize, (gridSize * y - 5) + gridSize + gridSize / 2, 25, 15), SystemColors.ControlText, flags);
+                TextRenderer.DrawText(e.Graphics, speed.ToString(), this.Font,
+                new Rectangle((gridSize * x + 2) + gridSize, (gridSize * y - 5) + gridSize + gridSize / 2, 25, 15), SystemColors.ControlText, flags);
             }
 
         }
