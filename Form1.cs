@@ -12,7 +12,7 @@ namespace GPS
 {
     public partial class Form1 : Form
     {
-        int gridSize = 0;
+        int gridSize = 100;
         List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
 
         public Form1(int gS, List<List<List<int>>> sLM)
@@ -34,15 +34,15 @@ namespace GPS
         {
 
             //Draw Starting Grid
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < speedLimitMatrix.Count; i++)
             {
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < speedLimitMatrix.Count; j++)
                 {
-                    if (i < 5 - 1)
+                    if (i < speedLimitMatrix.Count - 1)
                     {
                         e.Graphics.DrawLine(Pens.Black, new Point(gridSize + gridSize * i, gridSize + gridSize * j), new Point(gridSize + gridSize * (i + 1), gridSize + gridSize * (j)));
                     }
-                    if (j < 5 - 1)
+                    if (j < speedLimitMatrix.Count - 1)
                     {
                         e.Graphics.DrawLine(Pens.Black, new Point(gridSize + gridSize * i, gridSize + gridSize * j), new Point(gridSize + gridSize * (i), gridSize + gridSize * (j + 1)));
                     }
@@ -51,7 +51,8 @@ namespace GPS
                 }
             }
 
-            writeSpeedLimit(e, 150, 150, 0, 100);
+            writeSpeedLimit(e, 0, 0, 0, 100);
+            writeSpeedLimit(e, 2, 1, 1, 100);
 
 
             //drawPoint(e, 200, 400);
@@ -87,7 +88,12 @@ namespace GPS
             if (direction == 0)
             {
                 TextRenderer.DrawText(e.Graphics, "100", this.Font,
-                new Rectangle(x - 10, y + 5, 100, 100), SystemColors.ControlText, flags);
+                new Rectangle((gridSize * x - 12) + gridSize + gridSize / 2, (gridSize * y - 1) + gridSize, 25, 15), SystemColors.ControlText, flags);
+            }
+            else
+            {
+                TextRenderer.DrawText(e.Graphics, "100", this.Font,
+                new Rectangle((gridSize * x - 1) + gridSize, (gridSize * y - 5) + gridSize + gridSize / 2, 25, 15), SystemColors.ControlText, flags);
             }
 
         }
