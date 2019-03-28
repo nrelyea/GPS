@@ -35,7 +35,33 @@ namespace GPS
         public void Form1_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
 
-            //Draw Starting Grid & Speed Limits
+            drawGrid(e, speedLimitMatrix);
+
+            drawPath(e, path);
+
+
+
+        }
+
+        private void tnrAppTimer_Tick(object sender, EventArgs e)
+        {
+            this.Refresh();
+        }
+
+        // draw point
+        public void drawPoint(System.Windows.Forms.PaintEventArgs e, int x, int y)
+        {
+            int pointSize = 10;
+
+            Rectangle pt = new Rectangle(x - pointSize / 2, y - pointSize / 2, pointSize, pointSize);
+            System.Drawing.SolidBrush redBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
+            e.Graphics.FillEllipse(redBrush, pt);
+            e.Graphics.DrawEllipse(Pens.Black, pt);
+        }
+
+        // Draw Starting Grid & Speed Limits
+        public void drawGrid(System.Windows.Forms.PaintEventArgs e, List<List<List<int>>> speedLimitMatrix)
+        {
             for (int i = 0; i < speedLimitMatrix.Count; i++)
             {
                 for (int j = 0; j < speedLimitMatrix.Count; j++)
@@ -54,28 +80,6 @@ namespace GPS
                     drawPoint(e, gridSize + gridSize * i, gridSize + gridSize * j);
                 }
             }
-
-            drawPath(e, path);
-
-
-
-        }
-
-        private void tnrAppTimer_Tick(object sender, EventArgs e)
-        {
-            this.Refresh();
-        }
-
-        public void drawPoint(System.Windows.Forms.PaintEventArgs e, int x, int y)
-        {
-
-
-            int pointSize = 10;
-
-            Rectangle pt = new Rectangle(x - pointSize / 2, y - pointSize / 2, pointSize, pointSize);
-            System.Drawing.SolidBrush redBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
-            e.Graphics.FillEllipse(redBrush, pt);
-            e.Graphics.DrawEllipse(Pens.Black, pt);
         }
 
         // draw the proposed path
