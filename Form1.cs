@@ -13,13 +13,15 @@ namespace GPS
     public partial class Form1 : Form
     {
         int gridSize = 100;
+        string path = "";
         List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
 
-        public Form1(int gS, List<List<List<int>>> sLM)
+        public Form1(int gS, List<List<List<int>>> sLM, string p)
         {
             InitializeComponent();
             gridSize = gS;
             speedLimitMatrix = sLM;
+            path = p;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -53,7 +55,7 @@ namespace GPS
                 }
             }
 
-            drawPath(e, "RDRDRDRD");
+            drawPath(e, path);
 
 
 
@@ -79,12 +81,17 @@ namespace GPS
         // draw the proposed path
         public void drawPath(System.Windows.Forms.PaintEventArgs e, string path)
         {
+            TextFormatFlags flags = TextFormatFlags.Bottom | TextFormatFlags.EndEllipsis;
+
             if (path.Length != ((speedLimitMatrix.Count - 1) * 2) || path.Count(f => f == 'R') != path.Count(f => f == 'D'))
             {
                 invalidPath();
             }
             else
             {
+                TextRenderer.DrawText(e.Graphics, "Path length: " + pathLength(speedLimitMatrix, path).ToString(), this.Font,
+                new Rectangle(0, 0, 100, 15), SystemColors.ControlText, flags);
+
                 System.Drawing.SolidBrush greenBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Lime);
                 int x = gridSize;
                 int y = gridSize;
@@ -116,7 +123,6 @@ namespace GPS
             void invalidPath()
             {
                 e.Graphics.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.Red), new Rectangle(0, 0, 80, 20));
-                TextFormatFlags flags = TextFormatFlags.Bottom | TextFormatFlags.EndEllipsis;
                 TextRenderer.DrawText(e.Graphics, "INVALID PATH", this.Font,
                 new Rectangle(0, 0, 100, 15), SystemColors.ControlText, flags);
             }
@@ -136,6 +142,31 @@ namespace GPS
                 new Rectangle((gridSize * x + 2) + gridSize, (gridSize * y - 5) + gridSize + gridSize / 2, 25, 15), SystemColors.ControlText, flags);
             }
 
+        }
+
+        public int pathLength(List<List<List<int>>> matrix, string path)
+        {
+            int length = 0;
+            int x = 0;
+            int y = 0;
+
+
+            while (path.Length > 0)
+            {
+                if (path[0] == 'R')
+                {
+                    length += matrix[x][y][0];
+                    x += 1;
+                }
+                else if (path[0] == 'D')
+                {
+                    length += matrix[x][y][1];
+                    y += 1;
+                }
+                path = path.Substring(1);
+            }
+
+            return length;
         }
     }
 }

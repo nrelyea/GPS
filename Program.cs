@@ -37,13 +37,14 @@ namespace GPS
             Console.WriteLine(speedLimitMatrix[1][1][1]);
 
 
-
-
+            string path = "RDRDRDRD";
+            int length = pathLength(speedLimitMatrix, path);
+            Console.WriteLine(path + " path length: " + length);
 
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GPS.Form1(100, speedLimitMatrix));
+            Application.Run(new GPS.Form1(75, speedLimitMatrix, path));
 
         }
 
@@ -88,6 +89,31 @@ namespace GPS
 
 
             return matrix;
+        }
+
+        static int pathLength(List<List<List<int>>> matrix, string path)
+        {
+            int length = 0;
+            int x = 0;
+            int y = 0;
+
+
+            while (path.Length > 0)
+            {
+                if (path[0] == 'R')
+                {
+                    length += matrix[x][y][0];
+                    x += 1;
+                }
+                else if (path[0] == 'D')
+                {
+                    length += matrix[x][y][1];
+                    y += 1;
+                }
+                path = path.Substring(1);
+            }
+
+            return length;
         }
 
     }
