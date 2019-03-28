@@ -16,15 +16,15 @@ namespace GPS
         static void Main(string[] args)
         {
             /////////////////////////////
-            bool newRandomMatrix = false;
-            int newRandomMatrixSize = 5;
+            bool newRandomMatrix = true;
+            int newRandomMatrixSize = 10;
             /////////////////////////////
 
             List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
 
             if (newRandomMatrix)
             {
-                Console.Write("\rBuilding new matrix of size " + newRandomMatrixSize + "...");
+                Console.Write("\rBuilding new matrix of size " + newRandomMatrixSize + "x" + newRandomMatrixSize + "...");
                 speedLimitMatrix = randomSpeedLimitMatrix(newRandomMatrixSize, 10, 100);
                 File.WriteAllText(@"c:../../speedLimitMatrix.json", JsonConvert.SerializeObject(speedLimitMatrix));
             }
@@ -55,7 +55,7 @@ namespace GPS
 
 
             int length = pathLength(speedLimitMatrix, path);
-            Console.WriteLine(path + " path length: " + length);
+            Console.WriteLine("\n\n" + path + " path length: " + length);
 
 
             Application.EnableVisualStyles();
@@ -105,7 +105,7 @@ namespace GPS
 
             }
 
-            Console.WriteLine("\rChosen path = " + path + "\n");
+            Console.WriteLine("\rChosen path = " + path + "                      \n");
             return path;
         }
 
@@ -116,7 +116,7 @@ namespace GPS
 
             string path = r.Substring(0, matrix.Count - 1) + d.Substring(0, matrix.Count - 1);
 
-            Console.WriteLine("\rChosen path = " + path + "\n");
+            Console.WriteLine("\rChosen path = " + path + "                         \n");
             return path;
         }
 
@@ -140,25 +140,35 @@ namespace GPS
                 }
             }
 
-            Console.WriteLine("\rChosen path = " + path + "\n");
+            Console.WriteLine("\rChosen path = " + path + "                                    \n");
             return path;
         }
 
         static string pickBruteForcePath(List<List<List<int>>> matrix)
         {
-            string path = "";
+            Console.Write("\rDetermining all possible paths...");
+            List<string> lst = allPossiblePaths((matrix.Count - 1) * 2, matrix.Count - 1);
+            Console.Write("\rCalculating fastest path...             ");
 
-            List<string> lst = allPossiblePaths(4, 0);
-            Console.WriteLine(lst[0]);
+            string minPath = lst[0];
+            int minPathLength = pathLength(matrix, lst[0]);
+            for (int i = 1; i < lst.Count; i++)
+            {
+                int currentPathLength = pathLength(matrix, lst[i]);
+                if (currentPathLength < minPathLength)
+                {
+                    minPath = lst[i];
+                    minPathLength = currentPathLength;
+                }
+            }
 
 
 
 
 
 
-
-            Console.WriteLine("\rChosen path = " + path + "\n");
-            return path;
+            Console.Write("\rChosen path = " + minPath + "                  ");
+            return minPath;
 
 
 
@@ -186,6 +196,15 @@ namespace GPS
                 else
                 {
                     List<string> rChoice = allPossiblePaths(length - 1, rCount - 1);
+                    for (int i = 0; i < rChoice.Count; i++)
+                    {
+                        list.Add("R" + rChoice[i]);
+                    }
+                    List<string> dChoice = allPossiblePaths(length - 1, rCount);
+                    for (int i = 0; i < dChoice.Count; i++)
+                    {
+                        list.Add("D" + dChoice[i]);
+                    }
                 }
 
                 return list;
@@ -258,6 +277,15 @@ namespace GPS
             }
 
             return length;
+        }
+
+        static void PrintStringList(List<string> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                Console.WriteLine(i + ": " + list[i]);
+            }
+            Console.WriteLine();
         }
 
     }
