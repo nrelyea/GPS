@@ -16,7 +16,7 @@ namespace GPS
         static void Main(string[] args)
         {
             /////////////////////////////
-            bool newRandomMatrix = true;
+            bool newRandomMatrix = false;
             int newRandomMatrixSize = 5;
             /////////////////////////////
 
@@ -40,7 +40,10 @@ namespace GPS
 
             string path = "";
 
-            path = pickRandomPath(speedLimitMatrix);
+            //path = pickRandomPath(speedLimitMatrix);
+            //path = pickSimplePath(speedLimitMatrix);
+            //path = pickGreedyPath(speedLimitMatrix);
+            path = pickBruteForcePath(speedLimitMatrix);
 
 
 
@@ -57,7 +60,7 @@ namespace GPS
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GPS.Form1(75, speedLimitMatrix, path));
+            Application.Run(new GPS.Form1(50, speedLimitMatrix, path));
 
         }
 
@@ -104,6 +107,89 @@ namespace GPS
 
             Console.WriteLine("\rChosen path = " + path + "\n");
             return path;
+        }
+
+        static string pickSimplePath(List<List<List<int>>> matrix)
+        {
+            string r = "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR";
+            string d = "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD";
+
+            string path = r.Substring(0, matrix.Count - 1) + d.Substring(0, matrix.Count - 1);
+
+            Console.WriteLine("\rChosen path = " + path + "\n");
+            return path;
+        }
+
+        static string pickGreedyPath(List<List<List<int>>> matrix)
+        {
+            string path = "";
+            int x = 0;
+            int y = 0;
+
+            for (int i = 0; i < (matrix.Count - 1) * 2; i++)
+            {
+                if ((matrix[x][y][0] > matrix[x][y][1] && y < matrix.Count - 1) || x == matrix.Count - 1)
+                {
+                    path += "D";
+                    y += 1;
+                }
+                else
+                {
+                    path += "R";
+                    x += 1;
+                }
+            }
+
+            Console.WriteLine("\rChosen path = " + path + "\n");
+            return path;
+        }
+
+        static string pickBruteForcePath(List<List<List<int>>> matrix)
+        {
+            string path = "";
+
+            List<string> lst = allPossiblePaths(4, 0);
+            Console.WriteLine(lst[0]);
+
+
+
+
+
+
+
+            Console.WriteLine("\rChosen path = " + path + "\n");
+            return path;
+
+
+
+
+
+
+            List<string> allPossiblePaths(int length, int rCount)
+            {
+                List<string> list = new List<string> { };
+
+                if (length == 0 && rCount == 0)
+                {
+                    return list;
+                }
+                else if (rCount == 0)
+                {
+                    list.Add("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD".Substring(0, length));
+                    return list;
+                }
+                else if (rCount == length)
+                {
+                    list.Add("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR".Substring(0, length));
+                    return list;
+                }
+                else
+                {
+                    List<string> rChoice = allPossiblePaths(length - 1, rCount - 1);
+                }
+
+                return list;
+            }
         }
 
         static List<List<List<int>>> randomSpeedLimitMatrix(int size, int min, int max)
