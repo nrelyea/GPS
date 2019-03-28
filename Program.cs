@@ -22,8 +22,6 @@ namespace GPS
 
 
 
-            Console.WriteLine("HELLO");
-
             List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
 
             if (newRandomMatrix)
@@ -60,11 +58,26 @@ namespace GPS
                 {
                     List<int> point = new List<int> { };
 
-                    Random r1 = new Random();
-                    point.Add(10 * (r1.Next(min, max + 1) / 10));
+                    if (i < size - 1)
+                    {
+                        Random r1 = new Random();
+                        point.Add(10 * (r1.Next(min, max + 1) / 10));
+                    }
+                    else
+                    {
+                        point.Add(999999);
+                    }
                     Thread.Sleep(20);
-                    Random r2 = new Random();
-                    point.Add(10 * (r2.Next(min, max + 1) / 10));
+                    if (j < size - 1)
+                    {
+                        Random r2 = new Random();
+                        point.Add(10 * (r2.Next(min, max + 1) / 10));
+                    }
+                    else
+                    {
+                        point.Add(999999);
+                    }
+
 
                     column.Add(point);
                 }

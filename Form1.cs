@@ -53,15 +53,7 @@ namespace GPS
                 }
             }
 
-            //writeSpeedLimit(e, 0, 0, 0, 100);
-            //writeSpeedLimit(e, 2, 1, 1, 100);
-
-
-            //drawPoint(e, 200, 400);
-
-            //Point previous = new Point(100, 300);
-            //Point current = new Point(200, 400);
-            // e.Graphics.DrawLine(Pens.Black, previous, current);
+            drawPath(e, "RDRDRDRD");
 
 
 
@@ -82,6 +74,52 @@ namespace GPS
             System.Drawing.SolidBrush redBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
             e.Graphics.FillEllipse(redBrush, pt);
             e.Graphics.DrawEllipse(Pens.Black, pt);
+        }
+
+        // draw the proposed path
+        public void drawPath(System.Windows.Forms.PaintEventArgs e, string path)
+        {
+            if (path.Length != ((speedLimitMatrix.Count - 1) * 2) || path.Count(f => f == 'R') != path.Count(f => f == 'D'))
+            {
+                invalidPath();
+            }
+            else
+            {
+                System.Drawing.SolidBrush greenBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Lime);
+                int x = gridSize;
+                int y = gridSize;
+                while (path.Length > 0)
+                {
+                    if (path[0] == 'R')
+                    {
+                        e.Graphics.FillRectangle(greenBrush, new Rectangle(x - 3, y - 3, gridSize + 6, 6));
+                        x += gridSize;
+                    }
+                    else if (path[0] == 'D')
+                    {
+                        e.Graphics.FillRectangle(greenBrush, new Rectangle(x - 3, y - 3, 6, gridSize + 6));
+                        y += gridSize;
+                    }
+                    else
+                    {
+                        invalidPath();
+                        break;
+                    }
+
+                    path = path.Substring(1);
+                }
+
+
+
+            }
+
+            void invalidPath()
+            {
+                e.Graphics.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.Red), new Rectangle(0, 0, 80, 20));
+                TextFormatFlags flags = TextFormatFlags.Bottom | TextFormatFlags.EndEllipsis;
+                TextRenderer.DrawText(e.Graphics, "INVALID PATH", this.Font,
+                new Rectangle(0, 0, 100, 15), SystemColors.ControlText, flags);
+            }
         }
 
         public void writeSpeedLimit(System.Windows.Forms.PaintEventArgs e, int x, int y, int direction, int speed)
