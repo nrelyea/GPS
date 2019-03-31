@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,8 +17,8 @@ namespace GPS
         static void Main(string[] args)
         {
             /////////////////////////////
-            bool newRandomMatrix = false;
-            int newRandomMatrixSize = 4;
+            bool newRandomMatrix = true;
+            int newRandomMatrixSize = 20;
             /////////////////////////////
 
             List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
@@ -61,7 +62,7 @@ namespace GPS
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GPS.Form1(75, speedLimitMatrix, path));
+            Application.Run(new GPS.Form1(40, speedLimitMatrix, path));
 
         }
 
@@ -147,9 +148,9 @@ namespace GPS
 
         static string pickBruteForcePath(List<List<List<int>>> matrix)
         {
-            Console.Write("\rDetermining all possible paths...");
+            Console.Write("\rDetermining all possible paths...          ");
             List<string> lst = allPossiblePaths((matrix.Count - 1) * 2, matrix.Count - 1);
-            Console.Write("\rCalculating fastest path...             ");
+            Console.Write("\rCalculating fastest path...                ");
 
             string minPath = lst[0];
             int minPathLength = pathLength(matrix, lst[0]);
@@ -207,43 +208,55 @@ namespace GPS
             string path = "";
 
             List<List<int>> minMatrix = new List<List<int>> { };
-            List<List<char>> directionMatrix = new List<List<char>> { };
+            List<List<string>> directionMatrix = new List<List<string>> { };
             for (int i = 0; i < matrix.Count; i++)
             {
                 minMatrix.Add(new List<int> { });
-                directionMatrix.Add(new List<char> { });
+                directionMatrix.Add(new List<string> { });
                 for (int j = 0; j < matrix.Count; j++)
                 {
                     minMatrix[i].Add(0);
-                    directionMatrix[i].Add('/');
+                    directionMatrix[i].Add("/");
                 }
             }
 
             for (int i = 0; i < matrix.Count; i++)
             {
                 minMatrix.Add(new List<int> { });
-                directionMatrix.Add(new List<char> { });
+                directionMatrix.Add(new List<string> { });
                 for (int j = 0; j < matrix.Count; j++)
                 {
-                    Console.WriteLine("\nPoint " + i + "," + j + ": ");
                     if (!(i == 0 && j == 0))
                     {
                         if (i == 0)
                         {
                             minMatrix[i][j] = minMatrix[i][j - 1] + matrix[i][j - 1][1];
-                            directionMatrix[i][j] = 'U';
-                            Console.WriteLine("min = " + minMatrix[i][j] + " by going U");
+                            directionMatrix[i][j] = directionMatrix[i][j - 1] + "U";
                         }
                         else if (j == 0)
                         {
                             minMatrix[i][j] = minMatrix[i - 1][j] + matrix[i - 1][j][0];
-                            directionMatrix[i][j] = 'L';
-                            Console.WriteLine("min = " + minMatrix[i][j] + " by going L");
+                            directionMatrix[i][j] = directionMatrix[i - 1][j] + "L";
+                        }
+                        else if (minMatrix[i][j - 1] + matrix[i][j - 1][1] < minMatrix[i - 1][j] + matrix[i - 1][j][0])
+                        {
+                            minMatrix[i][j] = minMatrix[i][j - 1] + matrix[i][j - 1][1];
+                            directionMatrix[i][j] = directionMatrix[i][j - 1] + "U";
+                        }
+                        else
+                        {
+                            minMatrix[i][j] = minMatrix[i - 1][j] + matrix[i - 1][j][0];
+                            directionMatrix[i][j] = directionMatrix[i - 1][j] + "L";
                         }
                     }
 
                 }
             }
+
+            path = directionMatrix[matrix.Count - 1][matrix.Count - 1];
+            path = path.Substring(1);
+            path = Regex.Replace(path, "L|R", (m) => m.Value == "L" ? "R" : "L");
+            path = Regex.Replace(path, "U|D", (m) => m.Value == "U" ? "D" : "U");
 
             Console.WriteLine("\rChosen path = " + path + "                                    \n");
             return path;
