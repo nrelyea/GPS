@@ -16,8 +16,8 @@ namespace GPS
         static void Main(string[] args)
         {
             /////////////////////////////
-            bool newRandomMatrix = true;
-            int newRandomMatrixSize = 10;
+            bool newRandomMatrix = false;
+            int newRandomMatrixSize = 4;
             /////////////////////////////
 
             List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
@@ -43,7 +43,8 @@ namespace GPS
             //path = pickRandomPath(speedLimitMatrix);
             //path = pickSimplePath(speedLimitMatrix);
             //path = pickGreedyPath(speedLimitMatrix);
-            path = pickBruteForcePath(speedLimitMatrix);
+            //path = pickBruteForcePath(speedLimitMatrix);
+            path = pickDynamicPath(speedLimitMatrix);
 
 
 
@@ -60,7 +61,7 @@ namespace GPS
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GPS.Form1(50, speedLimitMatrix, path));
+            Application.Run(new GPS.Form1(75, speedLimitMatrix, path));
 
         }
 
@@ -162,18 +163,8 @@ namespace GPS
                 }
             }
 
-
-
-
-
-
             Console.Write("\rChosen path = " + minPath + "                  ");
             return minPath;
-
-
-
-
-
 
             List<string> allPossiblePaths(int length, int rCount)
             {
@@ -209,6 +200,53 @@ namespace GPS
 
                 return list;
             }
+        }
+
+        static string pickDynamicPath(List<List<List<int>>> matrix)
+        {
+            string path = "";
+
+            List<List<int>> minMatrix = new List<List<int>> { };
+            List<List<char>> directionMatrix = new List<List<char>> { };
+            for (int i = 0; i < matrix.Count; i++)
+            {
+                minMatrix.Add(new List<int> { });
+                directionMatrix.Add(new List<char> { });
+                for (int j = 0; j < matrix.Count; j++)
+                {
+                    minMatrix[i].Add(0);
+                    directionMatrix[i].Add('/');
+                }
+            }
+
+            for (int i = 0; i < matrix.Count; i++)
+            {
+                minMatrix.Add(new List<int> { });
+                directionMatrix.Add(new List<char> { });
+                for (int j = 0; j < matrix.Count; j++)
+                {
+                    Console.WriteLine("\nPoint " + i + "," + j + ": ");
+                    if (!(i == 0 && j == 0))
+                    {
+                        if (i == 0)
+                        {
+                            minMatrix[i][j] = minMatrix[i][j - 1] + matrix[i][j - 1][1];
+                            directionMatrix[i][j] = 'U';
+                            Console.WriteLine("min = " + minMatrix[i][j] + " by going U");
+                        }
+                        else if (j == 0)
+                        {
+                            minMatrix[i][j] = minMatrix[i - 1][j] + matrix[i - 1][j][0];
+                            directionMatrix[i][j] = 'L';
+                            Console.WriteLine("min = " + minMatrix[i][j] + " by going L");
+                        }
+                    }
+
+                }
+            }
+
+            Console.WriteLine("\rChosen path = " + path + "                                    \n");
+            return path;
         }
 
         static List<List<List<int>>> randomSpeedLimitMatrix(int size, int min, int max)
