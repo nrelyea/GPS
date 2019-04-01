@@ -14,14 +14,19 @@ namespace GPS
     {
         int gridSize = 100;
         string path = "";
+        List<string> pathList = new List<string> { };
         List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
 
-        public Form1(int gS, List<List<List<int>>> sLM, string p)
+        public Form1(int gS, List<List<List<int>>> sLM, List<string> pL)
         {
             InitializeComponent();
             gridSize = gS;
             speedLimitMatrix = sLM;
-            path = p;
+            path = pL[0];
+            for (int i = 0; i < pL.Count; i++)
+            {
+                pathList.Add(pL[i]);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -38,8 +43,6 @@ namespace GPS
             drawGrid(e, speedLimitMatrix);
 
             drawPath(e, path);
-
-
 
         }
 
@@ -171,6 +174,30 @@ namespace GPS
             }
 
             return length;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            path = pathList[0];
+            this.Invalidate();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            path = pathList[1];
+            this.Invalidate();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            path = pathList[2];
+            this.Invalidate();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            path = pathList[3];
+            this.Invalidate();
         }
     }
 }

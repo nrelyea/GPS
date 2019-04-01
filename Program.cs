@@ -17,8 +17,8 @@ namespace GPS
         static void Main(string[] args)
         {
             /////////////////////////////
-            bool newRandomMatrix = true;
-            int newRandomMatrixSize = 20;
+            bool newRandomMatrix = false;
+            int newRandomMatrixSize = 15;
             /////////////////////////////
 
             List<List<List<int>>> speedLimitMatrix = new List<List<List<int>>> { };
@@ -35,17 +35,18 @@ namespace GPS
                 speedLimitMatrix = JsonConvert.DeserializeObject<List<List<List<int>>>>(json);
             }
 
+            List<string> pathList = new List<string> { };
 
-
-
-
-            string path = "";
+            pathList.Add(pickSimplePath(speedLimitMatrix));
+            pathList.Add(pickRandomPath(speedLimitMatrix));
+            pathList.Add(pickGreedyPath(speedLimitMatrix));
+            pathList.Add(pickDynamicPath(speedLimitMatrix));
 
             //path = pickRandomPath(speedLimitMatrix);
             //path = pickSimplePath(speedLimitMatrix);
             //path = pickGreedyPath(speedLimitMatrix);
             //path = pickBruteForcePath(speedLimitMatrix);
-            path = pickDynamicPath(speedLimitMatrix);
+            //path = pickDynamicPath(speedLimitMatrix);
 
 
 
@@ -56,13 +57,14 @@ namespace GPS
             //Console.Read();
 
 
-            int length = pathLength(speedLimitMatrix, path);
-            Console.WriteLine("\n\n" + path + " path length: " + length);
+            //int length = pathLength(speedLimitMatrix, path);
+            //Console.WriteLine("\n\n" + path + " path length: " + length);
 
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GPS.Form1(40, speedLimitMatrix, path));
+            Application.Run(new GPS.Form1(45, speedLimitMatrix, pathList));
+            Console.WriteLine("yeet");
 
         }
 
@@ -107,7 +109,7 @@ namespace GPS
 
             }
 
-            Console.WriteLine("\rChosen path = " + path + "                      \n");
+            Console.WriteLine("\rRandom path = " + path + "                      \n");
             return path;
         }
 
@@ -118,7 +120,7 @@ namespace GPS
 
             string path = r.Substring(0, matrix.Count - 1) + d.Substring(0, matrix.Count - 1);
 
-            Console.WriteLine("\rChosen path = " + path + "                         \n");
+            Console.WriteLine("\rSimple path = " + path + "                         \n");
             return path;
         }
 
@@ -142,7 +144,7 @@ namespace GPS
                 }
             }
 
-            Console.WriteLine("\rChosen path = " + path + "                                    \n");
+            Console.WriteLine("\rGreedy path = " + path + "                                    \n");
             return path;
         }
 
@@ -164,7 +166,7 @@ namespace GPS
                 }
             }
 
-            Console.Write("\rChosen path = " + minPath + "                  ");
+            Console.Write("\rBrute Force path = " + minPath + "                  ");
             return minPath;
 
             List<string> allPossiblePaths(int length, int rCount)
@@ -258,7 +260,7 @@ namespace GPS
             path = Regex.Replace(path, "L|R", (m) => m.Value == "L" ? "R" : "L");
             path = Regex.Replace(path, "U|D", (m) => m.Value == "U" ? "D" : "U");
 
-            Console.WriteLine("\rChosen path = " + path + "                                    \n");
+            Console.WriteLine("\rDynamic path = " + path + "                                    \n");
             return path;
         }
 
